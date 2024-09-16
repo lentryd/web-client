@@ -1,17 +1,17 @@
-# web-client
+# @lentryd/web-client
 
 A simple client for interacting with a web server. It automatically stores cookies and adds them to subsequent requests.
 
 ## Installation
 
 ```bash
-npm install web-client
+npm install @lentryd/web-client
 ```
 
 ## Usage
 
 ```typescript
-import WebClient from "web-client";
+import WebClient from "@lentryd/web-client";
 
 // Create a client with a base URL
 const client = new WebClient("http://example.com");
