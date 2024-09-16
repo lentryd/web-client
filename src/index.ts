@@ -83,7 +83,7 @@ export default class Client {
     get: () => {
       return getHeaders(this._headers);
     },
-    set: (key: string, value: string | Function) => {
+    set: (key: string, value: string | (() => string | undefined)) => {
       this._headers = setHeaders(this._headers, key, value);
       return this.headers.get();
     },
@@ -106,6 +106,13 @@ export default class Client {
       return this.path.get();
     },
   };
+
+  // Response hooks
+  private _responseHook: (res: Response) => Promise<void | Response> =
+    async () => void 0;
+  public onResponse(hook: typeof this._responseHook) {
+    this._responseHook = hook;
+  }
 
   /**
    * Join the path to the origin
@@ -142,13 +149,17 @@ export default class Client {
     if (init?.params) url += encodeQuery(init.params);
 
     // Make a request
-    const res = await fetch(url, {
+    let res = await fetch(url, {
       ...init,
       headers: {
         ...this.headers.get(),
         ...init?.headers,
       },
     });
+    // Run response hook
+    const hook = await this._responseHook(res);
+    // If the hook returns a response, then save it
+    if (hook instanceof Response) res = hook;
     // If the request was unsuccessful, then throw an error
     if (!res.ok) {
       throw new Error(

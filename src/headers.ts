@@ -33,7 +33,7 @@ export function getHeaders(headers: ExtraHeaders) {
 export function setHeaders(
   headers: ExtraHeaders,
   key: string,
-  value: string | Function
+  value: string | (() => string | undefined)
 ) {
   // Find the header by key
   const index = headers.findIndex((h) => h.key === key);
