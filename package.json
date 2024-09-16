@@ -21,14 +21,15 @@
   "author": "lentryd",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.5.5",
-    "@types/node-fetch": "^2.6.11"
+    "@types/node": "^22.5.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "node-fetch": "2.x",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "@types/node-fetch": "^2.6.11",
+    "@types/ws": "^8.5.12"
   }
 }
