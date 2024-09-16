@@ -12,11 +12,12 @@ export type ExtraHeaders = {
   value: string | (() => string | undefined);
 }[];
 export type ExtraHeadersRaw = { [key: string]: string };
-export type RequestHook = (
+export type ResponseHook = (
   res: Response,
   url: string,
   init?: RequestInit
-) => Promise<void | Request> | void | Request;
+) => Promise<void | Response> | void | Response;
+export { Response };
 
 // Interfaces for the Client class
 export interface InitWS extends ClientOptions {
@@ -113,8 +114,8 @@ export default class Client {
   };
 
   // Response hooks
-  private _responseHook: RequestHook = async () => void 0;
-  public onResponse(hook: RequestHook) {
+  private _responseHook: ResponseHook = async () => void 0;
+  public onResponse(hook: ResponseHook) {
     this._responseHook = hook;
   }
 
