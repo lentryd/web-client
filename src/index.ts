@@ -12,6 +12,11 @@ export type ExtraHeaders = {
   value: string | (() => string | undefined);
 }[];
 export type ExtraHeadersRaw = { [key: string]: string };
+export type RequestHook = (
+  res: Response,
+  url: string,
+  init?: RequestInit
+) => Promise<void | Request> | void | Request;
 
 // Interfaces for the Client class
 export interface InitWS extends ClientOptions {
@@ -108,9 +113,8 @@ export default class Client {
   };
 
   // Response hooks
-  private _responseHook: (res: Response) => Promise<void | Response> =
-    async () => void 0;
-  public onResponse(hook: typeof this._responseHook) {
+  private _responseHook: RequestHook = async () => void 0;
+  public onResponse(hook: RequestHook) {
     this._responseHook = hook;
   }
 
@@ -157,7 +161,7 @@ export default class Client {
       },
     });
     // Run response hook
-    const hook = await this._responseHook(res);
+    const hook = await this._responseHook(res, url, init);
     // If the hook returns a response, then save it
     if (hook instanceof Response) res = hook;
     // If the request was unsuccessful, then throw an error
