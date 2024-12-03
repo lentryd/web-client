@@ -27,9 +27,10 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "node-fetch": "2.x",
-    "ws": "^8.18.0",
     "@types/node-fetch": "^2.6.11",
-    "@types/ws": "^8.5.12"
+    "@types/ws": "^8.5.12",
+    "https-proxy-agent": "^7.0.5",
+    "node-fetch": "2.x",
+    "ws": "^8.18.0"
   }
 }

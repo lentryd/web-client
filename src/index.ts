@@ -1,5 +1,6 @@
 import WS, { ClientOptions } from "ws";
 import fetch, { Response, RequestInit } from "node-fetch";
+import type { HttpsProxyAgent } from "https-proxy-agent";
 
 import { decodeCookie, encodeCookie } from "./cookie";
 import { joinURL, isAbsolute, encodeQuery } from "./url";
@@ -68,6 +69,18 @@ export default class Client {
     this.headers.set("Referer", this.origin);
     this.headers.set("Cookie", () => this.cookie.get());
   }
+
+  // Work with the agent
+  private _agent: HttpsProxyAgent<any> | undefined = undefined;
+  public agent = {
+    get: () => {
+      return this._agent;
+    },
+    set: (agent: HttpsProxyAgent<any>) => {
+      this._agent = agent;
+      return this.agent.get();
+    },
+  };
 
   // Work with cookies
   private _cookie: DecodeCookie = {};
@@ -138,6 +151,7 @@ export default class Client {
         ...init?.headers,
         ...this.headers.get(),
       },
+      agent: this.agent.get(),
     });
   }
 
@@ -160,6 +174,7 @@ export default class Client {
         ...this.headers.get(),
         ...init?.headers,
       },
+      agent: this.agent.get(),
     });
     // Run response hook
     const hook = await this._responseHook(res, url, init);
